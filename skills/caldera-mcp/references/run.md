@@ -1,89 +1,94 @@
-# Run a traffic test
+# Run
 
-Read `inventory/network.json` first. Then the Caldera lists. Then
-create. One operation per confirm.
+Initiate chaos. You choose the profiles, the sources, and the
+groups. Do not ask the operator to name them. Do not stop to
+confirm.
 
-## 1. Network file
+A narrower line still runs without a playbook name. Marks, DSCP,
+ToS, or differentiated packets run the traffic profile only. Scan,
+trigger, or detection runs the scan profile only. Application, dev,
+or prod runs the application profile only. Initiate chaos, start
+chaos, run the lab, or any other goal runs all three, traffic then
+scan then application.
 
-`devices[]` is who exists. `services[]` is what a traffic test may
-open a connection to. `group` on a device is the Caldera group when
-that host runs an agent (`branch`, `hq`, `cloud`, or whatever the
-file says). Do not invent a group.
-
-If the operator said to refresh the network, stop after
-`references/workspace-contract.md` collect. Do not start Caldera in
-that same turn.
-
-## 2. Who is enrolled
+## 1. Groups
 
 `caldera_status`, then `caldera_get` agents with `include`.
 
-An agent is eligible when `trusted` is true and `last_seen` is
-within two hours. Match `host` to `devices[].name`. The operation
-`group` is that device's `group`. Hosts in the file with no enrolled
-agent are not a target. Report them in the reply. Do not deploy an
-agent.
+An agent is eligible when `trusted` is true, `last_seen` is within
+two hours, and `group` is not empty. Run one operation for each
+distinct group among those agents. Do not read
+`inventory/network.json` to pick the group. Do not invent a group.
+An empty `group` hits every agent. Skip an agent whose group is
+empty and name that host in the reply. Do not deploy an agent.
 
-## 3. Which adversary
+## 2. Profiles
 
-List adversaries with `include`. Read the chosen adversary, then the
-abilities in its `atomic_ordering` (name, tactic, technique id,
-technique name only).
+List adversaries. Keep a row whose name starts with `lab`, ignoring
+case. Read its description and the names of the abilities in
+`atomic_ordering`. Drop `command`. Every kept ability must be
+tactic `discovery` and must open a connection.
 
-Use the adversary the operator named. Every ability in it must be
-tactic `discovery` and must open a connection (port, HTTP, DNS).
-If they did not name one, stop and ask which adversary. Do not pick
-one.
+Classify each adversary:
+
+- marked packets, DSCP, ToS, or SYN → traffic
+- a port scan → scan
+- an application or HTTP request → application
+
+A class with no adversary is named in the reply. The other classes
+still run.
 
 Planner: the one whose `name` is `atomic`.
 
-## 4. Which source
+## 3. Source
 
-List sources. Open the one you will use and keep `trait` plus
-`value`.
+List sources. Keep `trait` and `value`. Do not replace facts.
 
-Use the source the operator named. Do not replace its facts. If they
-named no source, stop and ask which source. Then create the operation.
+Pair an adversary with the source whose name shares a word with it:
+traffic, scan, or app. When two sources carry the same trait, that
+shared word is the pair. Traffic and scan need `remote.host.ip`.
+Application needs `app.url`. If no source pairs, skip that adversary
+and say so.
 
-## 5. Already running
+## 4. Already running
 
-`caldera_get` `/api/v2/operations/summary`. If an operation with this
-adversary and this group is `state` `running`, do not create another.
-Write the stamp from that operation and say it is already running.
+`caldera_get` `/api/v2/operations/summary`. If that adversary and
+that group are `state` `running`, do not create another. Say it is
+already running and continue with the next pair.
 
-## 6. Create
+## 5. Create
 
-`caldera_write` `POST /api/v2/operations` with the body in
-`tools.md`. `name` is `<group>-traffic-<YYYYMMDDTHHMMZ>`.
+One `caldera_write` `POST /api/v2/operations` per pair, in class
+order, and within a class one group at a time. The body is in
+`tools.md`. `name` is `<group>-chaos-<YYYYMMDDTHHMMZ>`.
 
-Read links once, `/api/v2/operations/{id}/links`. Keep `id`, `status`,
-`paw`, `host`, `decide`, `finish`, and ability `name`, `tactic`,
-`technique_id`. Drop every command field. Status `0` is complete.
-Any other number is not complete. Do not poll in a loop. One read
-after create is the record. The operation may still be `running`.
+After each create, one read of `/api/v2/operations/{id}/links`.
+Keep `id`, `status`, `paw`, `host`, `decide`, `finish`, and ability
+`name`, `tactic`, `technique_id`. Drop every command field. Status
+`0` is complete. Any other number is not. Do not poll.
 
-## 7. Write
+## 6. Write
 
-Rewrite `security/metadata.json`. Write `security/<stamp>.json` once.
-Stamp `YYYY-MM-DDTHH-MM-SSZ`. At most 10 files under `security/`;
-delete older after the write. Do not delete `security/metadata.json`.
+One `campaigns/operations/<stamp>.json` per operation you created
+or found already running. Stamp `YYYY-MM-DDTHH-MM-SSZ`. Then
+rewrite `campaigns/metadata.json`. `next_test` is the class you
+would repeat. Keep 10 stamps. Delete older after the write.
 
 ## Reply
+
+One block per operation:
 
 ```text
 Operation: <name>
 Group: <group>
 Adversary: <name>
 State: <running|finished|paused>
-Agents: <n eligible>, <hosts skipped>
+Agents: <n eligible>
 Links: <n complete> / <n read>
-Wrote: security/<stamp>.json
-Stimulus: <start> -> <now>
-Next: none
+Wrote: campaigns/operations/<stamp>.json
 ```
 
-`Stimulus` is the window a NetFlow or Splunk visit can correlate.
-This skill does not query those systems.
+End with `Next: <what a later visit should repeat>`.
 
-Pause or finish only when the operator says pause or finish, and
+Pause or finish only when the operator says pause or finish and
 names the operation. `PATCH` `state` only.

@@ -4,13 +4,15 @@ Deployed model is **MiniMax** unless noted.
 
 | Agent | Version | Model |
 |-------|---------|-------|
-| Chaos | 1.0.0 | MiniMax |
+| Chaos | 1.1.0 | MiniMax |
 | Device Discovery | 1.0.1 | MiniMax |
 | Network Discovery | 1.0.2 | MiniMax |
 
 Device Discovery 1.0.1 (skill device-discovery 1.0.1, workspace-handoff 1.0.2): the connector supplies the host. The visit passes each device's forwarded port and does not ask for a host. MiniMax.
 
 Device Discovery 1.0.0 (skill device-discovery 1.0.0, workspace-handoff 1.0.2): reads `inventory/network.json` and writes interface addresses, CDP neighbors, and one firewall file per device. IOS-XE and FTD only, and only when a forwarded port is set. The collect command does not pass `timeout`. MiniMax.
+
+Chaos 1.1.0 (skill caldera-mcp 2.2.0, workspace-handoff 1.0.2): initiate chaos runs every lab profile on every enrolled group. The agent chooses the adversary, the source, and the groups. It does not ask. MiniMax.
 
 Chaos 1.0.0 (skill caldera-mcp 2.1.1, workspace-handoff 1.0.0): a run uses the adversary and source the operator names and does not replace that source. Collect keeps adversaries whose names start with `lab`. MiniMax.
 

@@ -43,17 +43,9 @@ A link that did not finish is not. `why` is one sentence. Leave
 
 ## 3. Run
 
-Only on a run line. Read the five files. Do not collect again in
-the same turn unless the operator also said to refresh.
-
-Group is the one they named. Adversary is the one they named, else
-`next_test.adversary`, else the relevant adversary whose abilities
-are scans. Targets are values already in `facts/lab.json`. When
-those facts do not cover the targets they named, `PUT` the source
-with `trait` and `value` only, then create the operation.
-
-Planner name `atomic`. `autonomous` 1. One read of the links after
-create. Write the stamp. Set `next_test` from what you started.
+Only on initiate chaos, start chaos, or run the lab. Follow
+`references/run.md`. Do not ask the operator to name the adversary,
+the source, or the group.
 
 ## Reply
 

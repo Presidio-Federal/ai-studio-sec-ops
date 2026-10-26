@@ -1,20 +1,21 @@
 ---
 name: caldera-mcp
-version: "2.1.1"
-description: "v2.1.1 — Caldera nurse: keep relevant agents, abilities, adversaries, and facts, and run a test from those abilities."
+version: "2.2.0"
+description: "v2.2.0 — Caldera nurse: on initiate chaos, run every lab profile against each enrolled group."
 ---
 
 # Caldera skill
 
-One visit. You keep the campaign chart and, when the line says to
-run, you start one operation from abilities already on that chart.
-You do not gather network data. You do not call CML or IOS-XE. You
-do not change device config. You do not write `health/`, `state/`,
-or `campaigns/network/`.
+One visit. You keep the campaign chart. When the line says initiate
+chaos, you start the lab operations from abilities already on that
+chart. You do not gather network data. You do not call CML or
+IOS-XE. You do not change device config. You do not write `health/`,
+`state/`, or `campaigns/network/`.
 
 A line that says to refresh the campaign, or names Caldera with no
-run, is a collect. A line that names a group and says to run is
-authorization for that operation. Do not ask again.
+run, is a collect. A line that says initiate chaos, start chaos, or
+run the lab is authorization. Do not ask which adversary, which
+source, or which group.
 
 The chart is `campaigns/`. Subdirectories are `agents`, `abilities`,
 `adversaries`, `facts`, and `operations`. Keep a row only when it
@@ -56,13 +57,14 @@ is the next campaign.
 | `campaigns/operations/<stamp>.json` | result | A run, or a collect that finds a new or changed lab operation. Never overwrite. |
 
 Paths: `references/workspace-contract.md`. Tools: `references/tools.md`.
-Steps: `references/visit.md`.
+A collect follows `references/visit.md`. Initiate chaos follows
+`references/run.md`.
 
 ## State machine
 
 Collect: READ boards → CALDERA lists → WRITE the five boards → STOP.
 
-Run: READ the five boards → MATCH group and facts → CREATE the operation → WRITE `campaigns/operations/<stamp>.json` and update metadata → STOP.
+Run: READ the five boards → CHOOSE every lab profile and every enrolled group → CREATE those operations → WRITE one `campaigns/operations/<stamp>.json` per operation and update metadata → STOP.
 
 ## Canonical top-level keys
 
