@@ -1,16 +1,33 @@
 # Run
 
-The agent runs `scripts/visit_chaos.py run` once, with
-`execution_type: "mcp_orchestration"`. The script chooses the
-profiles, the sources, and the groups. Do not ask the operator to
-name them. Do not stop to confirm. Do not call `caldera_get`.
+One `execute_command`, `execution_type: "mcp_orchestration"`. Use the
+path Studio shows for the attached `caldera-mcp/scripts/visit_chaos.py`.
+Copy it. Do not retype a path from memory. The transcript may render
+it as `Internal directory`; that is the real path.
+
+Each `execute_command` is a new container. In that container the workspace is the `file_explorer` folder beside `skills` on the path Studio shows for `visit_chaos.py`. Copy that directory. Pass it as `--workspace`. Do not pass the relative name `file_explorer`, and do not `cd`.
+
+```text
+python3 <skill>/scripts/visit_chaos.py run --workspace <file_explorer> --goal chaos
+```
+
+`--goal` is `traffic`, `scan`, or `application` when the line names
+one class. Otherwise `chaos`.
+
+The last stdout line is the summary. Ignore any runtime line above it.
+Reply from that line. Do not open the boards or the stamp to fill it.
+The script chooses the profiles, the sources, and the groups. Do not
+ask the operator to name them. Do not stop to confirm. Do not call
+`caldera_get` unless stderr says `hai_mcp unavailable`. The steps
+below are that manual order.
 
 A narrower line still runs without a playbook name. Marks, DSCP,
 ToS, or differentiated packets run the traffic profile only. Scan,
 trigger, or detection runs the scan profile only. Application, dev,
 or prod runs the application profile only. Initiate chaos, start
-chaos, run the lab, or any other goal runs all three, traffic then
-scan then application.
+chaos, or run the lab runs each of those classes that matches the
+network chart, traffic then scan then application. It does not run
+every ability in Caldera.
 
 ## 1. Groups
 
@@ -19,8 +36,8 @@ a list inside the script.
 
 An agent is eligible when `trusted` is true, `last_seen` is within
 two hours, and `group` is not empty. Run one operation for each
-distinct group among those agents. Do not read
-`inventory/network.json` to pick the group. Do not invent a group.
+distinct group among those agents. Do not use the network chart
+to pick the group. Do not invent a group.
 An empty `group` hits every agent. Skip an agent whose group is
 empty and name that host in the reply. Do not deploy an agent.
 
@@ -37,8 +54,14 @@ Classify each adversary:
 - a port scan → scan
 - an application or HTTP request → application
 
-A class with no adversary is named in the reply. The other classes
-still run.
+A profile runs only when every fact on its paired source is an
+address already on the network chart: an interface CIDR, an
+endpoint address, or a firewall object. The script reads
+`inventory/network.json`, `network/endpoints/current.json`, and
+`network/firewall/`. A fact that is not on that chart skips the
+profile. A chart with no addresses starts nothing. A class with
+no matching adversary is named in the reply. The other matching
+classes still run. Stock adversaries are not profiles.
 
 Planner: the one whose `name` is `atomic`.
 

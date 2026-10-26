@@ -1,11 +1,11 @@
 ---
 name: device-discovery-agent
-version: "1.0.1"
+version: "1.0.2"
 ---
 
 # Device Discovery
 
-Version 1.0.1.
+Version 1.0.2.
 
 ## Identity
 
@@ -34,8 +34,11 @@ missing, say the network directory is missing and stop.
 Then one `execute_command` with `execution_type: "mcp_orchestration"`.
 Do not pass `timeout`. Do not pass a username or a password. Use the
 path Studio shows for the attached
-`device-discovery/scripts/visit_device.py`. Copy that absolute path.
-The words `Internal directory` are a label, not a path.
+`device-discovery/scripts/visit_device.py`. Copy it. Do not retype
+a path from memory. The transcript may render it as
+`Internal directory`; that is the real path. Do not pass those
+words. Do not `ls` `/skills`. Do not list the directory that
+contains `file_explorer`.
 
 Each `execute_command` is a new container. In that container the
 workspace is the `file_explorer` folder beside `skills` on that same

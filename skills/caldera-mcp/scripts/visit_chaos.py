@@ -9,6 +9,7 @@ Commands are never written.
   python3 <skill>/scripts/visit_chaos.py run --workspace <file_explorer> --goal chaos
 """
 import argparse
+import ipaddress
 import json
 import re
 import sys
@@ -28,6 +29,13 @@ except ImportError:
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas"
 WORD = re.compile(r"[a-z]+")
 KIND_ORDER = ("traffic", "scan", "application")
+FORBIDDEN_TACTICS = {
+    "exfiltration",
+    "lateral-movement",
+    "impact",
+    "credential-access",
+    "defense-evasion",
+}
 GOAL_KIND = {
     "chaos": KIND_ORDER,
     "traffic": ("traffic",),
@@ -102,19 +110,32 @@ def device_key(host):
     return None
 
 
+def strip_arg(value):
+    return str(value or "").strip().strip("'\"")
+
+
 def resolve_workspace(given):
-    raw = Path(given)
-    ordered = [raw] if raw.is_absolute() else [Path.cwd() / raw]
-    ordered.append(Path(__file__).resolve().parents[3] / "file_explorer")
-    for path in ordered:
+    """Same rule as health-logging: the directory that holds the catalog anchor."""
+    raw = Path(strip_arg(given))
+    candidates = [raw]
+    if not raw.is_absolute():
+        candidates.append(Path.cwd() / raw)
+        candidates.append(Path.cwd())
+    candidates.append(Path(__file__).resolve().parents[3] / "file_explorer")
+    seen = []
+    for path in candidates:
         try:
             resolved = path.resolve()
         except OSError:
             continue
-        if resolved.is_dir():
+        if resolved in seen:
+            continue
+        seen.append(resolved)
+        if (resolved / "inventory" / "network.json").is_file():
             print(f"chaos workspace={resolved}", file=sys.stderr)
             return resolved
-    print('{"error": "workspace directory missing"}', file=sys.stderr)
+    print('{"error": "inventory/network.json missing"}', file=sys.stderr)
+    print("tried " + ", ".join(str(path) for path in seen), file=sys.stderr)
     return None
 
 
@@ -271,6 +292,105 @@ def pair_source(profile, sources):
     return None
 
 
+def add_net(nets, value):
+    if not isinstance(value, str):
+        return
+    text = value.strip()
+    if not text:
+        return
+    try:
+        net = ipaddress.ip_network(text if "/" in text else f"{text}/32", strict=False)
+    except ValueError:
+        return
+    if net not in nets:
+        nets.append(net)
+
+
+def collect_nets(obj, nets):
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if key in {"cidr", "address", "value"} and isinstance(value, str):
+                add_net(nets, value)
+            else:
+                collect_nets(value, nets)
+    elif isinstance(obj, list):
+        for item in obj:
+            collect_nets(item, nets)
+
+
+def chart_networks(ws):
+    """Addresses already written by the network and device visits."""
+    nets = []
+    docs = []
+    for rel in ("inventory/network.json", "network/endpoints/current.json"):
+        doc = visit_common.load_json(ws, rel)
+        if isinstance(doc, dict):
+            docs.append(doc)
+    folder = Path(ws) / "network" / "firewall"
+    if folder.is_dir():
+        for path in sorted(folder.glob("*.json")):
+            try:
+                doc = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(doc, dict):
+                docs.append(doc)
+    for doc in docs:
+        collect_nets(doc, nets)
+    return nets
+
+
+def fact_ip(value):
+    text = value.strip()
+    if "://" in text:
+        host = text.split("://", 1)[1].split("/", 1)[0]
+        host = host.rsplit("@", 1)[-1]
+        if host.startswith("[") and "]" in host:
+            host = host[1:host.index("]")]
+        elif host.count(":") == 1:
+            host = host.split(":", 1)[0]
+        text = host
+    try:
+        return ipaddress.ip_address(text)
+    except ValueError:
+        return None
+
+
+def on_chart(value, nets):
+    ip = fact_ip(value)
+    return ip is not None and any(ip in net for net in nets)
+
+
+def usable_facts(source):
+    rows = []
+    for fact in source.get("facts") or []:
+        if not isinstance(fact, dict):
+            continue
+        trait = fact.get("trait")
+        value = fact.get("value")
+        if trait in {"app.url", "remote.host.ip"} and isinstance(value, str):
+            rows.append({"trait": trait, "value": value})
+    return rows
+
+
+def profile_safe(profile, abilities):
+    ids = profile.get("ability_ids") or []
+    if not ids:
+        return False
+    for ability_id in ids:
+        tactic = (abilities.get(ability_id) or {}).get("tactic")
+        if tactic in FORBIDDEN_TACTICS:
+            return False
+    return True
+
+
+def source_matches(source, nets):
+    facts = usable_facts(source)
+    if not facts or not nets:
+        return False
+    return all(on_chart(fact["value"], nets) for fact in facts)
+
+
 def source_facts(sources):
     rows = []
     for source in sources:
@@ -293,13 +413,13 @@ def kept_abilities(bundle, profiles):
     for ability_id, ability in bundle["abilities"].items():
         if not isinstance(ability_id, str) or not ability_id:
             continue
+        if ability_id not in on_lab:
+            continue
         name = ability.get("name") or ""
-        why = why_for(name, ability_id in on_lab)
+        why = why_for(name, True)
         if why is None:
             continue
         tactic = ability.get("tactic")
-        if tactic != "discovery" and ability_id not in on_lab:
-            continue
         technique = ability.get("technique_id")
         rows.append({
             "ability_id": ability_id,
@@ -553,13 +673,28 @@ def cmd(args):
         print(f'{{"error": "{err}"}}', file=sys.stderr)
         return 1
     agents, groups = enrolled(bundle["agents"], now)
+    nets = chart_networks(ws)
     profiles = lab_profiles(bundle)
-    facts = source_facts(bundle["sources"])
-    abilities = kept_abilities(bundle, profiles)
-    selected = [profile for profile in profiles if profile["kind"] in GOAL_KIND[args.goal]]
+    environment = []
+    matched_sources = []
+    for profile in profiles:
+        source = pair_source(profile, bundle["sources"])
+        if source is None or not source_matches(source, nets):
+            continue
+        if not profile_safe(profile, bundle["abilities"]):
+            continue
+        environment.append(profile)
+        if source not in matched_sources:
+            matched_sources.append(source)
+    facts = source_facts(matched_sources)
+    abilities = kept_abilities(bundle, environment)
+    selected = [profile for profile in environment if profile["kind"] in GOAL_KIND[args.goal]]
     started = []
-    skipped = []
-    if args.command == "run":
+    skipped = [
+        profile["name"] for profile in profiles
+        if profile["kind"] in GOAL_KIND[args.goal] and profile not in environment
+    ]
+    if args.command == "run" and nets and groups:
         planner_id = atomic_planner(bundle["planners"])
         if planner_id is None:
             print('{"error": "atomic planner is missing"}', file=sys.stderr)
@@ -567,9 +702,6 @@ def cmd(args):
         active = running_pairs(bundle["operations"])
         for profile in selected:
             source = pair_source(profile, bundle["sources"])
-            if source is None:
-                skipped.append(profile["name"])
-                continue
             for group in groups:
                 if (group, profile["name"]) in active:
                     started.append({
@@ -588,14 +720,21 @@ def cmd(args):
                     continue
                 started.append(operation)
     at = checked_at(now)
-    if args.command == "collect":
-        headline = f"{len(agents)} agents enrolled, {len(profiles)} lab profiles ready. No operation started."
+    if not nets:
+        headline = "Network chart has no addresses. No operation started."
+    elif args.command == "collect":
+        headline = (
+            f"{len(agents)} agents enrolled, {len(environment)} profiles match the network chart. "
+            "No operation started."
+        )
     elif not groups:
         headline = "No enrolled group. No operation started."
+    elif not selected:
+        headline = "No lab profile matches the network chart. No operation started."
     else:
         headline = f"Started {len(started)} operations on {', '.join(groups)}."
-    status = "ok" if not skipped and (args.command == "collect" or started or not selected) else "partial"
-    if args.command == "run" and not groups:
+    status = "ok" if nets and not skipped and (args.command == "collect" or started or not selected) else "partial"
+    if args.command == "run" and (not groups or not nets or not selected):
         status = "blocked"
     report = report_for(at, agents, groups, started, headline, status)
     written = []
@@ -604,7 +743,7 @@ def cmd(args):
             written.append(stamp_operation(ws, now, operation, bundle["abilities"]))
             now = now + timedelta(seconds=1)
     try:
-        write_boards(ws, now, agents, abilities, profiles, facts, report, written, groups)
+        write_boards(ws, now, agents, abilities, environment, facts, report, written, groups)
     except Exception as exc:
         print(f'{{"error": "workspace file invalid: {exc.__class__.__name__}"}}', file=sys.stderr)
         return 1

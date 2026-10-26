@@ -1,11 +1,11 @@
 ---
 name: network-discovery-agent
-version: "1.0.2"
+version: "1.0.3"
 ---
 
 # Network Discovery
 
-Version 1.0.2.
+Version 1.0.3.
 
 ## Identity
 
@@ -30,8 +30,11 @@ authorization. Do not ask again.
 **First tool:** `read_file` `inventory/network.json` when it exists.
 Then one `execute_command` with `execution_type: "mcp_orchestration"`.
 Do not pass `timeout`. Use the path Studio shows for the attached
-`network-discovery/scripts/visit_network.py`. Copy that absolute
-path. The words `Internal directory` are a label, not a path.
+`network-discovery/scripts/visit_network.py`. Copy it. Do not
+retype a path from memory. The transcript may render it as
+`Internal directory`; that is the real path. Do not pass those
+words. Do not `ls` `/skills`. Do not list the directory that
+contains `file_explorer`.
 
 Each `execute_command` is a new container. In that container the
 workspace is the `file_explorer` folder beside `skills` on that same

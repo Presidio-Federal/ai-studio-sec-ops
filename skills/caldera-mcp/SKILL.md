@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.3.0"
-description: "v2.3.0 — Caldera nurse: initiate chaos runs in one orchestration script and writes state/chaos.json."
+version: "2.4.2"
+description: "v2.4.2 — Caldera nurse: initiate chaos runs the attached visit_chaos.py and writes state/chaos.json."
 ---
 
 # Caldera skill
@@ -57,29 +57,22 @@ is the next campaign.
 | `campaigns/operations/<stamp>.json` | result | A run, or a collect that finds a new or changed lab operation. Never overwrite. |
 | `state/chaos.json` | state | Every visit. Replaced. The concise report. |
 
-Paths: `references/workspace-contract.md`. Tools: `references/tools.md`.
-A collect follows `references/visit.md`. Initiate chaos follows
-`references/run.md`.
+Use exactly: `references/visit.md`, `references/run.md`,
+`references/tools.md`, `references/workspace-contract.md`.
+Do not search the workspace for them.
 
-The visit is one `execute_command` with
-`execution_type: "mcp_orchestration"`. Do not pass `timeout`. The
-script is `scripts/visit_chaos.py`. Copy its absolute path. Pass
-the copied `file_explorer` directory as `--workspace`. Do not call
-`caldera_get` yourself. `include` is a list inside the script.
-
-```text
-python3 <copied script path> collect --workspace <copied file_explorer directory>
-python3 <copied script path> run --workspace <copied file_explorer directory> --goal chaos
-```
-
-`--goal` is `traffic`, `scan`, or `application` when the line names
-one class. Otherwise `chaos`.
+**First tool:** `read_file` `inventory/network.json` to confirm the
+workspace is there. Then one `execute_command`,
+`execution_type: "mcp_orchestration"`, the command in
+`references/visit.md` or `references/run.md`. Do not pass `timeout`.
+Do not call `caldera_get` yourself unless stderr said
+`hai_mcp unavailable`. `include` is a list inside the script.
 
 ## State machine
 
 Collect: RUN `visit_chaos.py collect` → it writes the five boards and `state/chaos.json` → STOP.
 
-Run: RUN `visit_chaos.py run` → it chooses every lab profile and every enrolled group, creates those operations, and writes one `campaigns/operations/<stamp>.json` per operation, `state/chaos.json`, and metadata → STOP.
+Run: RUN `visit_chaos.py run` → it keeps lab profiles whose source facts are addresses on the network chart, creates one operation per enrolled group for each of those profiles, and writes one `campaigns/operations/<stamp>.json` per operation, `state/chaos.json`, and metadata → STOP. It does not start a stockpile adversary or an ability on its own.
 
 ## Canonical top-level keys
 

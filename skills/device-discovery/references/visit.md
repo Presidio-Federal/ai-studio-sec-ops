@@ -13,9 +13,10 @@ Then one `execute_command`, `execution_type: "mcp_orchestration"`.
 Do not pass `timeout`. Do not pass a username or a password. The
 script returns when the collect finishes. Studio's own cap is the
 backstop for a hung container. Use the path Studio shows for the
-attached `device-discovery/scripts/visit_device.py`. Copy that
-absolute path. The words `Internal directory` are a label, not a
-path.
+attached `device-discovery/scripts/visit_device.py`. Copy it. Do
+not retype a path from memory. The transcript may render it as
+`Internal directory`; that is the real path. Do not pass those
+words. Do not list the directory that contains `file_explorer`.
 
 Each `execute_command` is a new container. In that container the
 workspace is the `file_explorer` folder beside `skills` on that same

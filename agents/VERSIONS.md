@@ -4,9 +4,17 @@ Deployed model is **MiniMax** unless noted.
 
 | Agent | Version | Model |
 |-------|---------|-------|
-| Chaos | 1.2.0 | MiniMax |
-| Device Discovery | 1.0.1 | MiniMax |
-| Network Discovery | 1.0.2 | MiniMax |
+| Chaos | 1.3.2 | MiniMax |
+| Device Discovery | 1.0.2 | MiniMax |
+| Network Discovery | 1.0.3 | MiniMax |
+
+Chaos 1.3.2 (skill caldera-mcp 2.4.2, workspace-handoff 1.0.3): workspace handling matches health-logging. First read is `inventory/network.json`. The script accepts `--workspace` only when that file is in the directory. The command copies the path Studio shows for `caldera-mcp/scripts/visit_chaos.py`. MiniMax.
+
+Chaos 1.3.1 (skill caldera-mcp 2.4.1, workspace-handoff 1.0.3): the visit copies the script path Studio shows for the attached skill. It does not list the workspace root, `/skills`, or `/shared_workspace`. Built-in file tools take catalog paths. MiniMax.
+
+Network Discovery 1.0.3 (skill network-discovery 1.0.3) and Device Discovery 1.0.2 (skill device-discovery 1.0.2): same path rule. Copy the path Studio shows. Do not list the directory that contains `file_explorer`. MiniMax.
+
+Chaos 1.3.0 (skill caldera-mcp 2.4.0, workspace-handoff 1.0.3): initiate chaos starts a lab profile only when every fact on its source is an address already on the network chart. Stock abilities are not operations. One operation per enrolled group. MiniMax.
 
 Chaos 1.2.0 (skill caldera-mcp 2.3.0, workspace-handoff 1.0.3): the visit is one orchestration script. The model does not call `caldera_get`. `include` is a list inside the script. Initiate chaos still runs every lab profile on every enrolled group and rewrites `state/chaos.json`. MiniMax.
 

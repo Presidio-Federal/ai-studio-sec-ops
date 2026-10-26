@@ -1,7 +1,7 @@
 ---
 name: device-discovery
-version: "1.0.1"
-description: "v1.0.1 — Device visit that writes interface addresses, CDP neighbors, and firewall rules from the network snapshot ports."
+version: "1.0.2"
+description: "v1.0.2 — Device visit that writes interface addresses, CDP neighbors, and firewall rules from the network snapshot ports."
 ---
 
 # Device discovery

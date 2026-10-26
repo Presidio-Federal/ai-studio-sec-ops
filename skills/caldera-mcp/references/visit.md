@@ -1,9 +1,20 @@
 # Campaign visit
 
-The agent runs `scripts/visit_chaos.py collect` once, with
-`execution_type: "mcp_orchestration"`. The script lists Caldera.
-The agent does not call `caldera_get`. Do not read a network map
-and do not call a device.
+One `execute_command`, `execution_type: "mcp_orchestration"`. Use the
+path Studio shows for the attached `caldera-mcp/scripts/visit_chaos.py`.
+Copy it. Do not retype a path from memory. The transcript may render
+it as `Internal directory`; that is the real path.
+
+Each `execute_command` is a new container. In that container the workspace is the `file_explorer` folder beside `skills` on the path Studio shows for `visit_chaos.py`. Copy that directory. Pass it as `--workspace`. Do not pass the relative name `file_explorer`, and do not `cd`.
+
+```text
+python3 <skill>/scripts/visit_chaos.py collect --workspace <file_explorer>
+```
+
+The last stdout line is the summary. Ignore any runtime line above it.
+Reply from that line. Do not open the boards to fill it. Do not call
+`caldera_get` unless stderr says `hai_mcp unavailable`. Do not call
+a device.
 
 ## 1. What to keep
 
@@ -14,21 +25,20 @@ You do not.
 under two hours. `group` is the group the agent reported. `device`
 is `host`. Write `campaigns/agents/enrolled.json`.
 
-**Abilities.** Keep a row when the tactic is `discovery` and the
-name contains scan, probe, sweep, or port, and a linux executor
-exists. Also keep an ability id that a `lab` adversary already
-lists. Store id, name, tactic, technique id, and why it was kept.
-Write `campaigns/abilities/relevant.json`. Discard every other
-ability. There are thousands. Do not page them into the workspace.
+**Abilities.** Keep an ability only when a lab profile that matches
+the network chart lists it. Store id, name, tactic, technique id,
+and why it was kept. Write `campaigns/abilities/relevant.json`.
+Discard every other ability. There are thousands. Do not page them
+into the workspace. Do not start an ability on its own.
 
 **Adversaries.** Keep a row whose name starts with `lab`, ignoring
 case, or whose
 `atomic_ordering` is entirely inside the relevant ability ids.
 Write `campaigns/adversaries/relevant.json`.
 
-**Facts.** Open a source only when its name starts with `lab` or
-an operation on the summary points at it. Keep a fact whose trait
-is `app.url` or `remote.host.ip`. Write `campaigns/facts/lab.json`.
+**Facts.** Open a source only when its name starts with `lab`. Keep
+a fact whose trait is `app.url` or `remote.host.ip` and whose
+address is on the network chart. Write `campaigns/facts/lab.json`.
 
 **Report.** Rewrite `state/chaos.json` after the boards. `headline`
 is one sentence: how many agents and lab profiles are ready, and
