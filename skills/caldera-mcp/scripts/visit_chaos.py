@@ -358,7 +358,16 @@ def fact_ip(value):
 
 def on_chart(value, nets):
     ip = fact_ip(value)
-    return ip is not None and any(ip in net for net in nets)
+    if ip is not None:
+        return any(ip in net for net in nets)
+    text = value.strip()
+    if "://" in text:
+        return False
+    try:
+        fact_net = ipaddress.ip_network(text, strict=False)
+    except ValueError:
+        return False
+    return any(fact_net.overlaps(net) for net in nets)
 
 
 def usable_facts(source):

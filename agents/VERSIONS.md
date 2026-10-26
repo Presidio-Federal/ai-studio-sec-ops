@@ -8,7 +8,7 @@ Deployed model is **MiniMax** unless noted.
 | Device Discovery | 1.0.2 | MiniMax |
 | Network Discovery | 1.0.3 | MiniMax |
 
-Chaos 1.3.2 (skill caldera-mcp 2.4.2, workspace-handoff 1.0.3): workspace handling matches health-logging. First read is `inventory/network.json`. The script accepts `--workspace` only when that file is in the directory. The command copies the path Studio shows for `caldera-mcp/scripts/visit_chaos.py`. MiniMax.
+Chaos 1.3.2 (skill caldera-mcp 2.4.3, workspace-handoff 1.0.3): a source fact may be a subnet. It matches the network chart when that subnet overlaps an address already on the chart. Workspace handling matches health-logging. First read is `inventory/network.json`. The script accepts `--workspace` only when that file is in the directory. The command copies the path Studio shows for `caldera-mcp/scripts/visit_chaos.py`. MiniMax.
 
 Chaos 1.3.1 (skill caldera-mcp 2.4.1, workspace-handoff 1.0.3): the visit copies the script path Studio shows for the attached skill. It does not list the workspace root, `/skills`, or `/shared_workspace`. Built-in file tools take catalog paths. MiniMax.
 

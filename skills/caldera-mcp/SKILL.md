@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.4.2"
-description: "v2.4.2 — Caldera nurse: initiate chaos runs the attached visit_chaos.py and writes state/chaos.json."
+version: "2.4.3"
+description: "v2.4.3 — Caldera nurse: initiate chaos runs the attached visit_chaos.py and writes state/chaos.json."
 ---
 
 # Caldera skill

@@ -55,8 +55,9 @@ Classify each adversary:
 - an application or HTTP request → application
 
 A profile runs only when every fact on its paired source is an
-address already on the network chart: an interface CIDR, an
-endpoint address, or a firewall object. The script reads
+address or a subnet already on the network chart: an interface
+CIDR, an endpoint address, or a firewall object. A subnet fact
+matches when it overlaps one of those. The script reads
 `inventory/network.json`, `network/endpoints/current.json`, and
 `network/firewall/`. A fact that is not on that chart skips the
 profile. A chart with no addresses starts nothing. A class with
