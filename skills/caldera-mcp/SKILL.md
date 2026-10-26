@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.2.0"
-description: "v2.2.0 — Caldera nurse: on initiate chaos, run every lab profile against each enrolled group."
+version: "2.3.0"
+description: "v2.3.0 — Caldera nurse: initiate chaos runs in one orchestration script and writes state/chaos.json."
 ---
 
 # Caldera skill
@@ -9,8 +9,8 @@ description: "v2.2.0 — Caldera nurse: on initiate chaos, run every lab profile
 One visit. You keep the campaign chart. When the line says initiate
 chaos, you start the lab operations from abilities already on that
 chart. You do not gather network data. You do not call CML or
-IOS-XE. You do not change device config. You do not write `health/`,
-`state/`, or `campaigns/network/`.
+IOS-XE. You do not change device config. You do not write `health/`
+or `campaigns/network/`. The visit report is `state/chaos.json`.
 
 A line that says to refresh the campaign, or names Caldera with no
 run, is a collect. A line that says initiate chaos, start chaos, or
@@ -55,16 +55,31 @@ is the next campaign.
 | `campaigns/adversaries/relevant.json` | snapshot | Every collect. Replaced. |
 | `campaigns/facts/lab.json` | snapshot | Every collect. Replaced. |
 | `campaigns/operations/<stamp>.json` | result | A run, or a collect that finds a new or changed lab operation. Never overwrite. |
+| `state/chaos.json` | state | Every visit. Replaced. The concise report. |
 
 Paths: `references/workspace-contract.md`. Tools: `references/tools.md`.
 A collect follows `references/visit.md`. Initiate chaos follows
 `references/run.md`.
 
+The visit is one `execute_command` with
+`execution_type: "mcp_orchestration"`. Do not pass `timeout`. The
+script is `scripts/visit_chaos.py`. Copy its absolute path. Pass
+the copied `file_explorer` directory as `--workspace`. Do not call
+`caldera_get` yourself. `include` is a list inside the script.
+
+```text
+python3 <copied script path> collect --workspace <copied file_explorer directory>
+python3 <copied script path> run --workspace <copied file_explorer directory> --goal chaos
+```
+
+`--goal` is `traffic`, `scan`, or `application` when the line names
+one class. Otherwise `chaos`.
+
 ## State machine
 
-Collect: READ boards → CALDERA lists → WRITE the five boards → STOP.
+Collect: RUN `visit_chaos.py collect` → it writes the five boards and `state/chaos.json` → STOP.
 
-Run: READ the five boards → CHOOSE every lab profile and every enrolled group → CREATE those operations → WRITE one `campaigns/operations/<stamp>.json` per operation and update metadata → STOP.
+Run: RUN `visit_chaos.py run` → it chooses every lab profile and every enrolled group, creates those operations, and writes one `campaigns/operations/<stamp>.json` per operation, `state/chaos.json`, and metadata → STOP.
 
 ## Canonical top-level keys
 

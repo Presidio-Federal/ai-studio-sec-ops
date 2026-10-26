@@ -1,7 +1,7 @@
 ---
 name: workspace-handoff
-version: "1.0.2"
-description: "v1.0.2 — Shared workspace contract: who writes each path, the envelope, keys, quiet visits, and how a visit script receives the workspace."
+version: "1.0.3"
+description: "v1.0.3 — Shared workspace contract: who writes each path, the envelope, keys, quiet visits, and how a visit script receives the workspace."
 ---
 
 # Workspace handoff
@@ -91,8 +91,10 @@ deletes older after the write.
 | `campaigns/adversaries/relevant.json` | snapshot | Caldera | `caldera-mcp` | kept adversaries |
 | `campaigns/facts/lab.json` | snapshot | Caldera | `caldera-mcp` | `trait` `value` |
 | `campaigns/operations/<stamp>.json` | result | Caldera | `caldera-mcp` | one operation |
+| `state/chaos.json` | state | Caldera | `caldera-mcp` `schemas/chaos-state.schema.json` | envelope, `headline`, `groups`, `operations[]` (`name` `group` `adversary` `state` `links_complete` `links_read`). Replaced every visit. The concise report of what chaos did. |
 
 Network Discovery does not write `campaigns/`, `network/endpoints/`,
 or `network/firewall/`. Device Discovery does not write
 `inventory/network.json`, `network/metadata.json`, or `campaigns/`.
-Caldera does not write `inventory/` or `network/`.
+Caldera writes `state/chaos.json` and does not write any other
+`state/` file. Caldera does not write `inventory/` or `network/`.

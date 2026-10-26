@@ -1,8 +1,9 @@
 # Run
 
-Initiate chaos. You choose the profiles, the sources, and the
-groups. Do not ask the operator to name them. Do not stop to
-confirm.
+The agent runs `scripts/visit_chaos.py run` once, with
+`execution_type: "mcp_orchestration"`. The script chooses the
+profiles, the sources, and the groups. Do not ask the operator to
+name them. Do not stop to confirm. Do not call `caldera_get`.
 
 A narrower line still runs without a playbook name. Marks, DSCP,
 ToS, or differentiated packets run the traffic profile only. Scan,
@@ -13,7 +14,8 @@ scan then application.
 
 ## 1. Groups
 
-`caldera_status`, then `caldera_get` agents with `include`.
+The script calls `caldera_status`, then reads agents. `include` is
+a list inside the script.
 
 An agent is eligible when `trusted` is true, `last_seen` is within
 two hours, and `group` is not empty. Run one operation for each
@@ -60,7 +62,8 @@ already running and continue with the next pair.
 
 One `caldera_write` `POST /api/v2/operations` per pair, in class
 order, and within a class one group at a time. The body is in
-`tools.md`. `name` is `<group>-chaos-<YYYYMMDDTHHMMZ>`.
+`tools.md`. `name` is `<group>-<kind>-<YYYYMMDDTHHMMZ>`. `kind` is `traffic`,
+`scan`, or `application`.
 
 After each create, one read of `/api/v2/operations/{id}/links`.
 Keep `id`, `status`, `paw`, `host`, `decide`, `finish`, and ability
@@ -71,8 +74,13 @@ Keep `id`, `status`, `paw`, `host`, `decide`, `finish`, and ability
 
 One `campaigns/operations/<stamp>.json` per operation you created
 or found already running. Stamp `YYYY-MM-DDTHH-MM-SSZ`. Then
-rewrite `campaigns/metadata.json`. `next_test` is the class you
-would repeat. Keep 10 stamps. Delete older after the write.
+rewrite `campaigns/metadata.json` and replace `state/chaos.json`.
+`headline` is one sentence of what started, on which groups.
+`operations` is one row per operation: name, group, adversary,
+state, and link counts. No command text. `next_test` on the
+metadata is the class you would repeat. `next_action` on the
+report is that same sentence. Keep 10 stamps. Delete older after
+the write. Do not delete `state/chaos.json`.
 
 ## Reply
 
@@ -85,7 +93,7 @@ Adversary: <name>
 State: <running|finished|paused>
 Agents: <n eligible>
 Links: <n complete> / <n read>
-Wrote: campaigns/operations/<stamp>.json
+Wrote: campaigns/operations/<stamp>.json, state/chaos.json
 ```
 
 End with `Next: <what a later visit should repeat>`.

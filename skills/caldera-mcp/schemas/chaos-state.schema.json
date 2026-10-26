@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "chaos-state/v1",
+  "title": "state/chaos.json",
+  "description": "Concise report of the chaos visit. Replaced every visit. Not a Caldera dump.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "keys", "schema", "updated_at", "source_agent", "status",
+    "headline", "next_action", "groups", "operations"
+  ],
+  "properties": {
+    "keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^(device|interface|site|service|test|control|incident|change|application):[^ ].*$" }
+    },
+    "schema": { "type": "string", "const": "chaos-state/v1" },
+    "updated_at": { "type": "string", "minLength": 1 },
+    "source_agent": { "type": "string", "const": "caldera-mcp" },
+    "status": { "type": "string", "enum": ["ok", "partial", "blocked"] },
+    "headline": { "type": "string", "minLength": 1 },
+    "next_action": { "type": "string" },
+    "groups": { "type": "array", "items": { "type": "string" } },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "group", "adversary", "state", "links_complete", "links_read"],
+        "properties": {
+          "name": { "type": "string" },
+          "group": { "type": "string" },
+          "adversary": { "type": "string" },
+          "state": { "type": "string" },
+          "links_complete": { "type": "integer", "minimum": 0 },
+          "links_read": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

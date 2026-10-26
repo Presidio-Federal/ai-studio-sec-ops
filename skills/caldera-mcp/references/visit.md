@@ -1,11 +1,14 @@
 # Campaign visit
 
-Read the boards first. Then list Caldera. Do not read a network map
+The agent runs `scripts/visit_chaos.py collect` once, with
+`execution_type: "mcp_orchestration"`. The script lists Caldera.
+The agent does not call `caldera_get`. Do not read a network map
 and do not call a device.
 
 ## 1. What to keep
 
-`caldera_status`, then the lists in `tools.md`.
+The script calls `caldera_status`, then the lists in `tools.md`.
+You do not.
 
 **Agents.** Keep a row when `trusted` is true and `last_seen` is
 under two hours. `group` is the group the agent reported. `device`
@@ -26,6 +29,11 @@ Write `campaigns/adversaries/relevant.json`.
 **Facts.** Open a source only when its name starts with `lab` or
 an operation on the summary points at it. Keep a fact whose trait
 is `app.url` or `remote.host.ip`. Write `campaigns/facts/lab.json`.
+
+**Report.** Rewrite `state/chaos.json` after the boards. `headline`
+is one sentence: how many agents and lab profiles are ready, and
+that no operation was started. `operations` lists any operation this
+visit found already running. `status` is `ok` when Caldera answered.
 
 **Operations.** From the summary, keep a row whose name starts with
 `lab-` or whose group matches an enrolled agent. A new id, or a
@@ -59,7 +67,7 @@ Abilities: <n> kept
 Adversaries: <n> kept
 Facts: <n>
 Next test: <adversary or none>
-Wrote: campaigns/metadata.json
+Wrote: campaigns/metadata.json, state/chaos.json
 ```
 
 Run:

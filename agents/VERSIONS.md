@@ -4,13 +4,17 @@ Deployed model is **MiniMax** unless noted.
 
 | Agent | Version | Model |
 |-------|---------|-------|
-| Chaos | 1.1.0 | MiniMax |
+| Chaos | 1.2.0 | MiniMax |
 | Device Discovery | 1.0.1 | MiniMax |
 | Network Discovery | 1.0.2 | MiniMax |
+
+Chaos 1.2.0 (skill caldera-mcp 2.3.0, workspace-handoff 1.0.3): the visit is one orchestration script. The model does not call `caldera_get`. `include` is a list inside the script. Initiate chaos still runs every lab profile on every enrolled group and rewrites `state/chaos.json`. MiniMax.
 
 Device Discovery 1.0.1 (skill device-discovery 1.0.1, workspace-handoff 1.0.2): the connector supplies the host. The visit passes each device's forwarded port and does not ask for a host. MiniMax.
 
 Device Discovery 1.0.0 (skill device-discovery 1.0.0, workspace-handoff 1.0.2): reads `inventory/network.json` and writes interface addresses, CDP neighbors, and one firewall file per device. IOS-XE and FTD only, and only when a forwarded port is set. The collect command does not pass `timeout`. MiniMax.
+
+Chaos 1.1.1 (skill caldera-mcp 2.2.1, workspace-handoff 1.0.3): every visit rewrites `state/chaos.json`, a one-page report of the groups and operations. The operation stamps stay the detail. MiniMax.
 
 Chaos 1.1.0 (skill caldera-mcp 2.2.0, workspace-handoff 1.0.2): initiate chaos runs every lab profile on every enrolled group. The agent chooses the adversary, the source, and the groups. It does not ask. MiniMax.
 

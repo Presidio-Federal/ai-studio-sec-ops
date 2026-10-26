@@ -1,7 +1,11 @@
 # Tools this visit calls
 
-Caldera only. Names from `docs/mcp-index.md`. Do not call CML,
-IOS-XE, Elastic, or Splunk on this visit.
+The script calls Caldera. The agent does not. Names from
+`docs/mcp-index.md`. Do not call CML, IOS-XE, Elastic, or Splunk
+on this visit.
+
+`include` is a list of field names, for example
+`["paw", "host", "group"]`. A quoted JSON string is rejected.
 
 | Tool | Use |
 |------|-----|
@@ -28,7 +32,7 @@ Operation body:
 
 ```json
 {
-  "name": "<group>-<YYYYMMDDTHHMMZ>",
+  "name": "<group>-<kind>-<YYYYMMDDTHHMMZ>",
   "group": "<group>",
   "autonomous": 1,
   "planner": { "id": "<planner whose name is atomic>" },

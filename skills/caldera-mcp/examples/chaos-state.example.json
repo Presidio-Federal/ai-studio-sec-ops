@@ -1,0 +1,20 @@
+{
+  "keys": ["device:<host>"],
+  "schema": "chaos-state/v1",
+  "updated_at": "2026-01-01T00:00:00Z",
+  "source_agent": "caldera-mcp",
+  "status": "ok",
+  "headline": "Started 3 profiles on <group>.",
+  "next_action": "Correlate the window on the next telemetry visit.",
+  "groups": ["<group>"],
+  "operations": [
+    {
+      "name": "<group>-chaos-<stamp>",
+      "group": "<group>",
+      "adversary": "<adversary>",
+      "state": "running",
+      "links_complete": 0,
+      "links_read": 2
+    }
+  ]
+}

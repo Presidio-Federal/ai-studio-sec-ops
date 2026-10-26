@@ -1,8 +1,9 @@
 # Workspace — campaigns
 
-This agent's chart is `campaigns/`. Network topology, CML, and
-IOS-XE belong to other agents. Do not write `campaigns/network/`,
-`inventory/`, `health/`, or `state/`. Do not write
+This agent's chart is `campaigns/`. The visit report is
+`state/chaos.json`. Network topology, CML, and IOS-XE belong to
+other agents. Do not write `campaigns/network/`, `inventory/`,
+`health/`, or any other `state/` file. Do not write
 `inventory/network.json` or `security/`.
 
 The skill owns these schemas. One writer. A collect replaces each
@@ -20,6 +21,7 @@ delete the boards.
 | `campaigns/adversaries/relevant.json` | snapshot | Every collect. |
 | `campaigns/facts/lab.json` | snapshot | Every collect. |
 | `campaigns/operations/<stamp>.json` | result | Material operation only. |
+| `state/chaos.json` | state | Every visit. Replaced. |
 
 A quiet collect rewrites the boards and does not add a stamp.
 
