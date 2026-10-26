@@ -1,7 +1,7 @@
 ---
 name: workspace-handoff
-version: "1.0.1"
-description: "v1.0.1 — Shared workspace contract: who writes each path, the envelope, keys, quiet visits, and how a visit script receives the workspace."
+version: "1.0.2"
+description: "v1.0.2 — Shared workspace contract: who writes each path, the envelope, keys, quiet visits, and how a visit script receives the workspace."
 ---
 
 # Workspace handoff
@@ -78,9 +78,13 @@ deletes older after the write.
 
 | File | Kind | Writer | Schema | Readers may rely on |
 |------|------|--------|--------|---------------------|
-| `inventory/network.json` | snapshot | Network Discovery | `network-discovery` `schemas/network-inventory.schema.json` | `lab_title` `lab_id` `collected_at` `status` `devices[].name` `group` `node_definition` `platform` (`iosxe` `nxos` `asa` `ftd` `linux`, or the source definition) `access.restconf.port` `access.ssh.port` `forwarded[]` `interfaces[].name` `interfaces[].cidr` `links[]` `services[]` `keys`. An IOS-XE check uses rows whose `platform` is `iosxe` and whose `access.restconf` is not null. Caldera reads this file and does not write it. |
+| `inventory/network.json` | snapshot | Network Discovery | `network-discovery` `schemas/network-inventory.schema.json` | `lab_title` `lab_id` `collected_at` `status` `devices[].name` `group` `node_definition` `platform` (`iosxe` `nxos` `asa` `ftd` `linux`, or the source definition) `access.restconf.port` `access.ssh.port` `forwarded[]` `interfaces[].name` `interfaces[].cidr` `links[]` `services[]` `keys`. Device Discovery reads rows whose `platform` is `iosxe` or `ftd` and whose `access.restconf` is not null. Caldera reads this file and does not write it. |
 | `network/metadata.json` | metadata | Network Discovery | `network-discovery` `schemas/network-metadata.schema.json` | `last_visit_id` `last_collected_at` `visits[]` |
-| `network/<stamp>.json` | observation | Network Discovery | `network-discovery` `schemas/network-visit.schema.json` | `visit_id` `checked_at` `coverage` `vs_prior.changed[]` `keys`. Written only when material. |
+| `network/<stamp>.json` | observation | Network Discovery | `network-discovery` `schemas/network-visit.schema.json` | `visit_id` `checked_at` `coverage` `vs_prior.changed[]` `keys`. Written only when material. Files directly in `network/`, not `network/endpoints/` or `network/firewall/`. |
+| `network/endpoints/current.json` | snapshot | Device Discovery | `device-discovery` `schemas/network-endpoints.schema.json` | `lab_title` `lab_id` `collected_at` `status` `devices[].name` `platform` `status` `interfaces[].name` `hardware` `cidr` `kind` `parent` `vlan` `zone` `management_only` `neighbors[].local_interface` `device` `port` `address` `platform` `keys`. Interface key uses `hardware` when set. Firewall neighbors are empty. |
+| `network/endpoints/metadata.json` | metadata | Device Discovery | `device-discovery` `schemas/network-endpoints-metadata.schema.json` | `last_visit_id` `last_collected_at` `visits[]` |
+| `network/endpoints/<stamp>.json` | observation | Device Discovery | `device-discovery` `schemas/network-endpoints-visit.schema.json` | `visit_id` `checked_at` `coverage` `vs_prior.changed[]` `keys`. Written only when material. |
+| `network/firewall/<device>.json` | snapshot | Device Discovery | `device-discovery` `schemas/network-firewall.schema.json` | `device` `collected_at` `status` `policies[].name` `default_action` `zones[].name` `interfaces` `objects[].name` `kind` `value` `rules[].name` `action` `policy` `source_zones` `destination_zones` `source_networks` `destination_networks` `source_ports` `destination_ports` `keys`. One file per firewall. The file name is the device `name`. |
 | `campaigns/metadata.json` | metadata | Caldera | `caldera-mcp` | `last_visit_id` `last_collected_at` `current_operation` `next_test` |
 | `campaigns/agents/enrolled.json` | snapshot | Caldera | `caldera-mcp` | enrolled agents |
 | `campaigns/abilities/relevant.json` | snapshot | Caldera | `caldera-mcp` | kept abilities |
@@ -88,5 +92,7 @@ deletes older after the write.
 | `campaigns/facts/lab.json` | snapshot | Caldera | `caldera-mcp` | `trait` `value` |
 | `campaigns/operations/<stamp>.json` | result | Caldera | `caldera-mcp` | one operation |
 
-Network Discovery does not write `campaigns/`. Caldera does not write
-`inventory/` or `network/`.
+Network Discovery does not write `campaigns/`, `network/endpoints/`,
+or `network/firewall/`. Device Discovery does not write
+`inventory/network.json`, `network/metadata.json`, or `campaigns/`.
+Caldera does not write `inventory/` or `network/`.

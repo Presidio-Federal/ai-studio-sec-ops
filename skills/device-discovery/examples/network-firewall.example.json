@@ -1,0 +1,35 @@
+{
+  "schema": "network-firewall/v1",
+  "device": "<device-b>",
+  "collected_at": "2026-01-01T00:00:00Z",
+  "source_agent": "device-discovery",
+  "status": "complete",
+  "policies": [
+    { "name": "<policy>", "default_action": "<action>" }
+  ],
+  "zones": [
+    { "name": "<zone>", "interfaces": ["<interface-b>"] },
+    { "name": "<inside-zone>", "interfaces": ["<subinterface>"] }
+  ],
+  "objects": [
+    { "name": "<object>", "kind": "HOST", "value": "<address>", "system": false }
+  ],
+  "rules": [
+    {
+      "name": "<rule>",
+      "policy": "<policy>",
+      "action": "PERMIT",
+      "source_zones": ["<zone>"],
+      "destination_zones": ["<inside-zone>"],
+      "source_networks": ["<object>"],
+      "destination_networks": [],
+      "source_ports": [],
+      "destination_ports": ["<port>"]
+    }
+  ],
+  "keys": [
+    "device:<device-b>",
+    "interface:<device-b>/<interface-b>",
+    "interface:<device-b>/<subinterface>"
+  ]
+}

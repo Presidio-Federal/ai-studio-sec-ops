@@ -1,0 +1,104 @@
+{
+  "schema": "network-endpoints/v1",
+  "lab_title": "<lab-title>",
+  "lab_id": "<lab-id>",
+  "collected_at": "2026-01-01T00:00:00Z",
+  "source_agent": "device-discovery",
+  "status": "complete",
+  "headline": "2 devices answered, 2 addressed interfaces, 1 neighbors.",
+  "next_action": "Caldera can read interface addresses, neighbors, and firewall rules.",
+  "coverage": {
+    "state": "complete",
+    "selected": 2,
+    "read": 2,
+    "failed": 0,
+    "remaining": 0,
+    "interfaces": 3,
+    "interfaces_with_address": 2,
+    "neighbors": 1,
+    "firewalls": 1,
+    "rules": 1
+  },
+  "devices": [
+    {
+      "name": "<device-a>",
+      "platform": "iosxe",
+      "status": "complete",
+      "error": null,
+      "collected_at": "2026-01-01T00:00:00Z",
+      "interfaces": [
+        {
+          "name": "<interface-a>",
+          "hardware": null,
+          "cidr": "<address>/<prefix>",
+          "kind": "physical",
+          "parent": null,
+          "vlan": null,
+          "zone": null,
+          "mode": null,
+          "link_state": null,
+          "management_only": false,
+          "keys": ["interface:<device-a>/<interface-a>"]
+        }
+      ],
+      "neighbors": [
+        {
+          "local_interface": "<interface-a>",
+          "device": "<neighbor>",
+          "port": "<neighbor-port>",
+          "address": "<neighbor-address>",
+          "platform": "<platform>"
+        }
+      ],
+      "keys": ["device:<device-a>", "interface:<device-a>/<interface-a>"]
+    },
+    {
+      "name": "<device-b>",
+      "platform": "ftd",
+      "status": "complete",
+      "error": null,
+      "collected_at": "2026-01-01T00:00:00Z",
+      "interfaces": [
+        {
+          "name": "<outside>",
+          "hardware": "<interface-b>",
+          "cidr": "<address>/<prefix>",
+          "kind": "physical",
+          "parent": null,
+          "vlan": null,
+          "zone": "<zone>",
+          "mode": "ROUTED",
+          "link_state": "UP",
+          "management_only": false,
+          "keys": ["interface:<device-b>/<interface-b>"]
+        },
+        {
+          "name": "<inside-network>",
+          "hardware": "<subinterface>",
+          "cidr": "<inside-address>/<prefix>",
+          "kind": "subinterface",
+          "parent": "<interface-c>",
+          "vlan": 100,
+          "zone": "<inside-zone>",
+          "mode": null,
+          "link_state": null,
+          "management_only": false,
+          "keys": ["interface:<device-b>/<subinterface>"]
+        }
+      ],
+      "neighbors": [],
+      "keys": [
+        "device:<device-b>",
+        "interface:<device-b>/<interface-b>",
+        "interface:<device-b>/<subinterface>"
+      ]
+    }
+  ],
+  "keys": [
+    "device:<device-a>",
+    "device:<device-b>",
+    "interface:<device-a>/<interface-a>",
+    "interface:<device-b>/<interface-b>",
+    "interface:<device-b>/<subinterface>"
+  ]
+}

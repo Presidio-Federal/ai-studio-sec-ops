@@ -1,0 +1,33 @@
+{
+  "schema": "network-endpoints-visit/v1",
+  "visit_id": "2026-01-01T00-00-00Z",
+  "checked_at": "2026-01-01T00:00:00Z",
+  "source_agent": "device-discovery",
+  "lab_title": "<lab-title>",
+  "status": "complete",
+  "headline": "Interface addresses, neighbors, or firewall rules changed.",
+  "coverage": {
+    "state": "complete",
+    "selected": 2,
+    "read": 2,
+    "failed": 0,
+    "remaining": 0,
+    "interfaces": 3,
+    "interfaces_with_address": 2,
+    "neighbors": 1,
+    "firewalls": 1,
+    "rules": 1
+  },
+  "vs_prior": {
+    "changed": [
+      {
+        "keys": ["interface:<device-a>/<interface-a>"],
+        "field": "cidr",
+        "prior": null,
+        "current": "<address>/<prefix>",
+        "at": "2026-01-01T00:00:00Z"
+      }
+    ]
+  },
+  "keys": ["device:<device-a>", "interface:<device-a>/<interface-a>"]
+}

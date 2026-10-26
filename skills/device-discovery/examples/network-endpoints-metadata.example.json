@@ -1,0 +1,29 @@
+{
+  "schema": "network-endpoints-metadata/v1",
+  "lab_title": "<lab-title>",
+  "source_agent": "device-discovery",
+  "last_visit_id": "2026-01-01T00-00-00Z",
+  "last_collected_at": "2026-01-01T00:00:00Z",
+  "coverage": {
+    "state": "complete",
+    "selected": 2,
+    "read": 2,
+    "failed": 0,
+    "remaining": 0,
+    "interfaces": 3,
+    "interfaces_with_address": 2,
+    "neighbors": 1,
+    "firewalls": 1,
+    "rules": 1
+  },
+  "visits": [
+    {
+      "watch_id": "2026-01-01T00-00-00Z",
+      "checked_at": "2026-01-01T00:00:00Z",
+      "status": "complete",
+      "delta": 1,
+      "stamp_written": true
+    }
+  ],
+  "keys": ["device:<device-a>", "device:<device-b>"]
+}

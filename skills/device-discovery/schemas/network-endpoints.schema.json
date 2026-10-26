@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "network-endpoints/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "lab_title", "lab_id", "collected_at", "source_agent",
+    "status", "headline", "next_action", "coverage", "devices", "keys"
+  ],
+  "properties": {
+    "schema": { "const": "network-endpoints/v1" },
+    "lab_title": { "type": "string", "minLength": 1 },
+    "lab_id": { "type": "string" },
+    "collected_at": { "type": "string" },
+    "source_agent": { "const": "device-discovery" },
+    "status": { "enum": ["complete", "partial", "unavailable"] },
+    "headline": { "type": "string" },
+    "next_action": { "type": "string" },
+    "coverage": { "$ref": "#/$defs/coverage" },
+    "devices": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/device" }
+    },
+    "keys": { "$ref": "#/$defs/keys" }
+  },
+  "$defs": {
+    "keys": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^(device|interface|site|service|test|control|incident|change|application):[^ ].*$" }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state", "selected", "read", "failed", "remaining",
+        "interfaces", "interfaces_with_address", "neighbors", "firewalls", "rules"
+      ],
+      "properties": {
+        "state": { "enum": ["complete", "partial", "unavailable"] },
+        "selected": { "type": "integer", "minimum": 0 },
+        "read": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "remaining": { "type": "integer", "minimum": 0 },
+        "interfaces": { "type": "integer", "minimum": 0 },
+        "interfaces_with_address": { "type": "integer", "minimum": 0 },
+        "neighbors": { "type": "integer", "minimum": 0 },
+        "firewalls": { "type": "integer", "minimum": 0 },
+        "rules": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name", "hardware", "cidr", "kind", "parent", "vlan", "zone",
+        "mode", "link_state", "management_only", "keys"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "hardware": { "type": ["string", "null"] },
+        "cidr": { "type": ["string", "null"] },
+        "kind": { "enum": ["physical", "subinterface", "loopback", "vlan"] },
+        "parent": { "type": ["string", "null"] },
+        "vlan": { "type": ["integer", "null"] },
+        "zone": { "type": ["string", "null"] },
+        "mode": { "type": ["string", "null"] },
+        "link_state": { "type": ["string", "null"] },
+        "management_only": { "type": "boolean" },
+        "keys": { "$ref": "#/$defs/keys" }
+      }
+    },
+    "neighbor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_interface", "device", "port", "address", "platform"],
+      "properties": {
+        "local_interface": { "type": "string" },
+        "device": { "type": "string" },
+        "port": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] },
+        "platform": { "type": ["string", "null"] }
+      }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name", "platform", "status", "error", "collected_at",
+        "interfaces", "neighbors", "keys"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "platform": { "enum": ["iosxe", "ftd"] },
+        "status": { "enum": ["complete", "partial", "unavailable"] },
+        "error": { "type": ["string", "null"] },
+        "collected_at": { "type": "string" },
+        "interfaces": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/interface" }
+        },
+        "neighbors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/neighbor" }
+        },
+        "keys": { "$ref": "#/$defs/keys" }
+      }
+    }
+  }
+}

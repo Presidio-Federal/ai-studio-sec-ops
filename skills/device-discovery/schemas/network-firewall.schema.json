@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "network-firewall/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "device", "collected_at", "source_agent", "status",
+    "policies", "zones", "objects", "rules", "keys"
+  ],
+  "properties": {
+    "schema": { "const": "network-firewall/v1" },
+    "device": { "type": "string", "minLength": 1 },
+    "collected_at": { "type": "string" },
+    "source_agent": { "const": "device-discovery" },
+    "status": { "enum": ["complete", "partial"] },
+    "policies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "default_action"],
+        "properties": {
+          "name": { "type": "string" },
+          "default_action": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "interfaces"],
+        "properties": {
+          "name": { "type": "string" },
+          "interfaces": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "kind", "value", "system"],
+        "properties": {
+          "name": { "type": "string" },
+          "kind": { "type": "string" },
+          "value": { "type": ["string", "null"] },
+          "system": { "type": "boolean" }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name", "policy", "action", "source_zones", "destination_zones",
+          "source_networks", "destination_networks", "source_ports", "destination_ports"
+        ],
+        "properties": {
+          "name": { "type": "string" },
+          "policy": { "type": "string" },
+          "action": { "type": "string" },
+          "source_zones": { "type": "array", "items": { "type": "string" } },
+          "destination_zones": { "type": "array", "items": { "type": "string" } },
+          "source_networks": { "type": "array", "items": { "type": "string" } },
+          "destination_networks": { "type": "array", "items": { "type": "string" } },
+          "source_ports": { "type": "array", "items": { "type": "string" } },
+          "destination_ports": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "keys": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^(device|interface|site|service|test|control|incident|change|application):[^ ].*$" }
+    }
+  }
+}
