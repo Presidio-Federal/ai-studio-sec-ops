@@ -1,0 +1,22 @@
+{
+  "schema": "network-visit/v1",
+  "visit_id": "2026-01-01T00-00-00Z",
+  "checked_at": "2026-01-01T00:00:00Z",
+  "source_agent": "network-discovery",
+  "lab_title": "<lab-title>",
+  "status": "partial",
+  "headline": "Forwarded ports or links changed.",
+  "coverage": { "state": "partial", "devices": 2, "links": 1, "forwarded": 2, "interfaces": 2, "interfaces_with_address": 1 },
+  "vs_prior": {
+    "changed": [
+      {
+        "keys": ["device:<device-a>"],
+        "field": "forwarded",
+        "prior": [],
+        "current": [{ "external_port": 9, "internal_port": 443 }],
+        "at": "2026-01-01T00:00:00Z"
+      }
+    ]
+  },
+  "keys": ["device:<device-a>", "interface:<device-a>/<interface-a>"]
+}

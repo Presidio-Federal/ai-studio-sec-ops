@@ -1,0 +1,18 @@
+{
+  "schema": "network-metadata/v1",
+  "lab_title": "<lab-title>",
+  "source_agent": "network-discovery",
+  "last_visit_id": "2026-01-01T00-00-00Z",
+  "last_collected_at": "2026-01-01T00:00:00Z",
+  "coverage": { "state": "partial", "devices": 2, "links": 1, "forwarded": 2, "interfaces": 2, "interfaces_with_address": 1 },
+  "visits": [
+    {
+      "watch_id": "2026-01-01T00-00-00Z",
+      "checked_at": "2026-01-01T00:00:00Z",
+      "status": "partial",
+      "delta": 1,
+      "stamp_written": true
+    }
+  ],
+  "keys": ["device:<device-a>", "device:<device-b>"]
+}

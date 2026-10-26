@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "network-visit/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "visit_id", "checked_at", "source_agent", "lab_title",
+    "status", "headline", "coverage", "vs_prior", "keys"
+  ],
+  "properties": {
+    "schema": { "const": "network-visit/v1" },
+    "visit_id": { "type": "string" },
+    "checked_at": { "type": "string" },
+    "source_agent": { "const": "network-discovery" },
+    "lab_title": { "type": "string" },
+    "status": { "enum": ["complete", "partial", "unavailable"] },
+    "headline": { "type": "string" },
+    "coverage": { "type": "object" },
+    "vs_prior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["changed"],
+      "properties": {
+        "changed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["keys", "field", "prior", "current", "at"],
+            "properties": {
+              "keys": { "type": "array", "items": { "type": "string" } },
+              "field": { "type": "string" },
+              "prior": {},
+              "current": {},
+              "at": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "keys": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^(device|interface|site|service|test|control|incident|change|application):[^ ].*$" }
+    }
+  }
+}

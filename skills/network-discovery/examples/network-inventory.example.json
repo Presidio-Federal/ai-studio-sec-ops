@@ -1,0 +1,71 @@
+{
+  "schema": "network-inventory/v1",
+  "lab_title": "<lab-title>",
+  "lab_id": "<lab-id>",
+  "collected_at": "2026-01-01T00:00:00Z",
+  "source_agent": "network-discovery",
+  "status": "partial",
+  "headline": "<lab-title>: 2 devices, 1 link, 2 forwarded ports.",
+  "next_action": "Interface addresses are incomplete.",
+  "coverage": {
+    "state": "partial",
+    "devices": 2,
+    "links": 1,
+    "forwarded": 2,
+    "interfaces": 2,
+    "interfaces_with_address": 1,
+    "unresolved_links": 0
+  },
+  "devices": [
+    {
+      "id": "<node-id>",
+      "name": "<device-a>",
+      "node_definition": "<node-definition>",
+      "state": "<state>",
+      "group": "<group>",
+      "tags": ["group:<group>"],
+      "agent_access": true,
+      "access": {
+        "restconf": { "port": 9, "internal_port": 443 },
+        "ssh": null
+      },
+      "forwarded": [
+        { "external_port": 9, "internal_port": 443 }
+      ],
+      "interfaces": [
+        { "name": "<interface-a>", "cidr": "<address>/<prefix>" }
+      ],
+      "keys": ["device:<device-a>", "interface:<device-a>/<interface-a>"]
+    },
+    {
+      "id": "<node-id-b>",
+      "name": "<device-b>",
+      "node_definition": "<node-definition>",
+      "state": "<state>",
+      "group": "<group>",
+      "tags": [],
+      "agent_access": false,
+      "access": { "restconf": null, "ssh": null },
+      "forwarded": [],
+      "interfaces": [
+        { "name": "<interface-b>", "cidr": null }
+      ],
+      "keys": ["device:<device-b>", "interface:<device-b>/<interface-b>"]
+    }
+  ],
+  "links": [
+    {
+      "a_device": "<device-a>",
+      "a_interface": "<interface-a>",
+      "b_device": "<device-b>",
+      "b_interface": "<interface-b>"
+    }
+  ],
+  "services": [],
+  "keys": [
+    "device:<device-a>",
+    "device:<device-b>",
+    "interface:<device-a>/<interface-a>",
+    "interface:<device-b>/<interface-b>"
+  ]
+}
