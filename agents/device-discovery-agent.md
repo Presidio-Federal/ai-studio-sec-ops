@@ -1,11 +1,11 @@
 ---
 name: device-discovery-agent
-version: "1.0.0"
+version: "1.0.1"
 ---
 
 # Device Discovery
 
-Version 1.0.0.
+Version 1.0.1.
 
 ## Identity
 
@@ -19,14 +19,12 @@ You do not run Caldera. You do not call CML. You do not change a
 device. You do not write `inventory/network.json`,
 `network/metadata.json`, or `campaigns/`.
 
-The host is the one on the task line. It is the address where those
-forwarded ports are published. If the task line names no host, say
-the host is missing and stop. Do not choose a host.
+The connector already has the host. Do not ask for it. Pass each
+device's forwarded port and nothing else about where the device lives.
 
 A device name on the task line limits the visit to that device. A
-line that names the host and says to refresh the devices, or the
-map, reads every `iosxe` and `ftd` row that has a forwarded port.
-Do not ask again.
+line that says to refresh the devices, or the map, reads every
+`iosxe` and `ftd` row that has a forwarded port. Do not ask again.
 
 ## Start immediately
 
@@ -45,7 +43,7 @@ absolute path. Copy that directory. Pass it as `--workspace`. Do
 not pass the relative name `file_explorer`, and do not `cd`.
 
 ```text
-python3 <copied script path> collect --workspace <copied file_explorer directory> --host "<host>"
+python3 <copied script path> collect --workspace <copied file_explorer directory>
 ```
 
 Add `--device "<name>"` only when the task line names one device.

@@ -5,7 +5,7 @@ collect runs under execution_type mcp_orchestration. One run reads
 inventory/network.json, calls one platform per device, and writes the
 interface map and firewall files. It does not print tool bodies.
 
-  python3 <skill>/scripts/visit_device.py collect --workspace <file_explorer> --host "<host>" [--device "<name>"]
+  python3 <skill>/scripts/visit_device.py collect --workspace <file_explorer> [--device "<name>"]
 """
 import argparse
 import json
@@ -430,19 +430,23 @@ def call_tool(name, args):
 
 
 def ios_get(host, port, path, fields):
-    body, err = call_tool("iosxe_restconf_get", {
+    args = {
         "path": path,
-        "host": host,
         "port": int(port),
         "params": {"fields": fields},
-    })
+    }
+    if host:
+        args["host"] = host
+    body, err = call_tool("iosxe_restconf_get", args)
     if err:
         return None, err
     return body.get("data"), None
 
 
 def ftd_get(host, port, path, params=None):
-    args = {"path": path, "host": host, "port": int(port)}
+    args = {"path": path, "port": int(port)}
+    if host:
+        args["host"] = host
     if params:
         args["params"] = params
     body, err = call_tool("ftd_get", args)
@@ -698,9 +702,9 @@ def finish(payload, code):
 
 
 def cmd_collect(args):
-    host = (args.host or "").strip()
-    if not host or any(char.isspace() for char in host) or "://" in host:
-        print('{"error": "host is missing"}', file=sys.stderr)
+    host = (args.host or "").strip() or None
+    if host and (any(char.isspace() for char in host) or "://" in host):
+        print('{"error": "host is not a name"}', file=sys.stderr)
         return 1
     ws = resolve_workspace(args.workspace)
     if ws is None:
@@ -998,7 +1002,7 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     collect = sub.add_parser("collect")
     collect.add_argument("--workspace", required=True)
-    collect.add_argument("--host", required=True)
+    collect.add_argument("--host", default=None)
     collect.add_argument("--device", default=None)
     args = parser.parse_args()
     if args.command == "collect":

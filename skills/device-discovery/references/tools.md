@@ -1,15 +1,15 @@
 # Device tools
 
 Read tools only. Names are from `docs/mcp-index.md`. Connection
-credentials stay on the connector. Pass `host` and `port`. Do not
-pass `username` or `password`.
+credentials stay on the connector. The connector supplies the host.
+Pass `port` only. Do not pass `host`, `username`, or `password`.
+Do not ask for a host.
 
-`host` is the task-line address. `port` is `access.restconf.port` on
-the device row. Do not guess either one.
+`port` is `access.restconf.port` on the device row. Do not guess it.
 
 ## IOS-XE
 
-`iosxe_restconf_get(path, host, port, params)` returns
+`iosxe_restconf_get(path, port, params)` returns
 `{ok, status_code, method, path, data}`. `params.fields` limits the
 body. Call a device only when `platform` is `iosxe`.
 
@@ -40,7 +40,7 @@ any other CDP field.
 
 ## Firewall
 
-`ftd_get(path, host, port, params)` returns
+`ftd_get(path, port, params)` returns
 `{ok, status_code, method, path, data}`. `path` is relative to
 `/api/fdm/latest/`. `params` may be `limit` and `offset`. Call a
 device only when `platform` is `ftd`. Page while `paging.count` is

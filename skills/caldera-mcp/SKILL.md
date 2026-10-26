@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.1.0"
-description: "v2.1.0 — Caldera nurse: keep relevant agents, abilities, adversaries, and facts, and run a test from those abilities."
+version: "2.1.1"
+description: "v2.1.1 — Caldera nurse: keep relevant agents, abilities, adversaries, and facts, and run a test from those abilities."
 ---
 
 # Caldera skill

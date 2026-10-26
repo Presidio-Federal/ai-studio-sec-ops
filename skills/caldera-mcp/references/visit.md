@@ -13,12 +13,13 @@ is `host`. Write `campaigns/agents/enrolled.json`.
 
 **Abilities.** Keep a row when the tactic is `discovery` and the
 name contains scan, probe, sweep, or port, and a linux executor
-exists. Also keep an ability id that a `lab-` adversary already
+exists. Also keep an ability id that a `lab` adversary already
 lists. Store id, name, tactic, technique id, and why it was kept.
 Write `campaigns/abilities/relevant.json`. Discard every other
 ability. There are thousands. Do not page them into the workspace.
 
-**Adversaries.** Keep a row whose name starts with `lab-`, or whose
+**Adversaries.** Keep a row whose name starts with `lab`, ignoring
+case, or whose
 `atomic_ordering` is entirely inside the relevant ability ids.
 Write `campaigns/adversaries/relevant.json`.
 

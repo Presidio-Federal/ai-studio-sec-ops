@@ -1,7 +1,7 @@
 ---
 name: device-discovery
-version: "1.0.0"
-description: "v1.0.0 — Device visit that writes interface addresses, CDP neighbors, and firewall rules from the network snapshot ports."
+version: "1.0.1"
+description: "v1.0.1 — Device visit that writes interface addresses, CDP neighbors, and firewall rules from the network snapshot ports."
 ---
 
 # Device discovery
@@ -10,9 +10,9 @@ One visit. You publish the interface map and the firewall files Caldera
 can read. You do not start a Caldera operation. You do not call CML.
 You do not change a device.
 
-The host is the address on the task line where the forwarded ports are
-published. If the task line names no host, stop and say the host is
-missing. Do not choose a host. Do not read one from the environment.
+The connector already has the host. Do not ask for it. Pass each
+device's forwarded port. Do not choose a host and do not read one
+from the environment.
 
 A device name on the task line limits the visit to that device. With
 no device name, the visit reads every `iosxe` and `ftd` row in
@@ -22,14 +22,14 @@ with any other `platform`, or with no forwarded port, is skipped.
 `inventory/network.json` must already exist. If it is missing, stop
 and say the network directory is missing. Do not collect CML here.
 
-A line that names the host and says to refresh the devices, or the
-map, is authorization. Do not ask again.
+A line that says to refresh the devices, or the map, is
+authorization. Do not ask again.
 
 ## Hard boundaries
 
-Read tools only: `iosxe_restconf_get` and `ftd_get`. Pass `host` and
-the forwarded `port` from the snapshot. Do not pass a username or a
-password. Do not call an IOS-XE write tool. Do not call `ftd_post`,
+Read tools only: `iosxe_restconf_get` and `ftd_get`. Pass the
+forwarded `port` from the snapshot. Omit `host`. Do not pass a
+username or a password. Do not call an IOS-XE write tool. Do not call `ftd_post`,
 `ftd_put`, `ftd_delete`, `ftd_deploy`, or `ftd_hit_counts`.
 
 One device per tool call. The script does that. Do not put two ports

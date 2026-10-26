@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "campaign-adversaries/v1",
   "title": "campaigns/adversaries/relevant.json",
-  "description": "Adversaries whose abilities are in the relevant set, or whose name starts with lab-.",
+  "description": "Adversaries whose abilities are in the relevant set, or whose name starts with lab.",
   "type": "object",
   "additionalProperties": false,
   "required": ["keys", "schema", "updated_at", "source_agent", "adversaries"],

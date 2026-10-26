@@ -30,14 +30,10 @@ List adversaries with `include`. Read the chosen adversary, then the
 abilities in its `atomic_ordering` (name, tactic, technique id,
 technique name only).
 
-Use an adversary when every ability tactic is `discovery` and the
-ability names are probes that open a connection (port, HTTP, DNS).
-The profile named `lab-probes` is that profile when it is on the
-server: its abilities are network-service probes (`T1046`).
-
-If the operator named a different adversary, use it only when it
-passes the same tactic check. Otherwise refuse and name the profile
-you would have used.
+Use the adversary the operator named. Every ability in it must be
+tactic `discovery` and must open a connection (port, HTTP, DNS).
+If they did not name one, stop and ask which adversary. Do not pick
+one.
 
 Planner: the one whose `name` is `atomic`.
 
@@ -46,17 +42,8 @@ Planner: the one whose `name` is `atomic`.
 List sources. Open the one you will use and keep `trait` plus
 `value`.
 
-Reuse a source when its `app.url` and `remote.host.ip` facts are the
-same set as `services[]` for this run. `lab-probes` is the source to
-compare first when that name exists.
-
-When they differ, update the source only if the run line told you to
-run. Body facts are `trait` and `value` from `services[]` only. Then
-create the operation.
-
-When no source matches and the run line did not name one, stop and
-say which facts are missing. Do not create an operation with an
-empty source.
+Use the source the operator named. Do not replace its facts. If they
+named no source, stop and ask which source. Then create the operation.
 
 ## 5. Already running
 

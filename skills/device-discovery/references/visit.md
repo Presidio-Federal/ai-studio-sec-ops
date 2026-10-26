@@ -1,15 +1,13 @@
 # Device visit
 
-One host. The script reads every selected device. You do not loop
-the tools yourself unless the script cannot start.
+The connector has the host. The script reads every selected device
+and passes that device's forwarded port. You do not loop the tools
+yourself unless the script cannot start. Do not ask for a host.
 
 ## Run
 
 `read_file` `inventory/network.json` first. If it is missing, stop
 and say the network directory is missing.
-
-The host is the one on the task line. If it is missing, stop and
-say the host is missing. Do not choose a host.
 
 Then one `execute_command`, `execution_type: "mcp_orchestration"`.
 Do not pass `timeout`. Do not pass a username or a password. The
@@ -25,7 +23,7 @@ absolute path. Copy that directory. Pass it as `--workspace`. Do
 not pass the relative name `file_explorer`, and do not `cd`.
 
 ```text
-python3 <copied script path> collect --workspace <copied file_explorer directory> --host "<host>"
+python3 <copied script path> collect --workspace <copied file_explorer directory>
 ```
 
 Add `--device "<name>"` only when the task line names one device.

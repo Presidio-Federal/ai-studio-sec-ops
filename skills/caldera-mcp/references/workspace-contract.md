@@ -25,7 +25,7 @@ A quiet collect rewrites the boards and does not add a stamp.
 
 ## Relevant
 
-A row that is not a trusted enrolled agent, not a `lab-` adversary,
+A row that is not a trusted enrolled agent, not a `lab` adversary,
 and not a discovery scan, probe, sweep, or port ability does not
 get a file. Do not store the Caldera catalog.
 
