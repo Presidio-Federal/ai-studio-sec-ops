@@ -16,9 +16,9 @@ this skill.
 A quiet success rewrites the snapshot and metadata and does not add
 a stamp. `last_collected_at` moves. `last_visit_id` stays.
 
-Material: a device appeared or disappeared, a `forwarded` pair
-changed, an interface `cidr` changed, or a link appeared or
-disappeared. A new `collected_at` is not material.
+Material: a device appeared or disappeared, `platform` changed, a
+`forwarded` pair changed, an interface `cidr` changed, or a link
+appeared or disappeared. A new `collected_at` is not material.
 
 The snapshot's `lab_title` is the title passed into the visit. A
 different title replaces the file; it does not merge two labs.

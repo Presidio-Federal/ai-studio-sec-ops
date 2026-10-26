@@ -58,11 +58,12 @@
     "device": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "name", "node_definition", "state", "group", "tags", "agent_access", "access", "forwarded", "interfaces", "keys"],
+      "required": ["id", "name", "node_definition", "platform", "state", "group", "tags", "agent_access", "access", "forwarded", "interfaces", "keys"],
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string", "minLength": 1 },
         "node_definition": { "type": "string" },
+        "platform": { "type": "string" },
         "state": { "type": ["string", "null"] },
         "group": { "type": ["string", "null"] },
         "tags": { "type": "array", "items": { "type": "string" } },

@@ -10,16 +10,16 @@ title is the one on the task line. If the task line names none, use
 title is missing. Do not choose a lab from the list.
 
 Then one `execute_command`, `execution_type: "mcp_orchestration"`.
+Do not pass `timeout`. The script returns when the collect
+finishes. Studio's own cap is the backstop for a hung container.
 Use the path Studio shows for the attached
-`network-discovery/scripts/visit_network.py`. Copy it. Do not retype
-a path from memory. The transcript may render it as
-`Internal directory`; that is the real path.
+`network-discovery/scripts/visit_network.py`. Copy that absolute
+path. The words `Internal directory` are a label, not a path.
 
 Each `execute_command` is a new container. In that container the
-workspace is the `file_explorer` folder beside `skills` on the path
-Studio shows for `visit_network.py`. Copy that directory. Pass it as
-`--workspace`. Do not pass the relative name `file_explorer`, and do
-not `cd`.
+workspace is the `file_explorer` folder beside `skills` on that same
+absolute path. Copy that directory. Pass it as `--workspace`. Do
+not pass the relative name `file_explorer`, and do not `cd`.
 
 ```text
 python3 <copied script path> collect --workspace <copied file_explorer directory> --lab "<title>"
@@ -36,7 +36,7 @@ by hand.
 
 From `cml_get_lab_details` with configurations requested:
 
-- Every node the tool returns. `name` is `label`. `node_definition` and `state` are copied. `group` is the value of a `group:` tag, else null.
+- Every node the tool returns. `name` is `label`. `node_definition` is copied. `platform` is `iosxe` for `cat8000v`, `iosv`, `csr1000v`, and `iosvl2`; `nxos` for `nxosv` and `nxosv9000`; `asa` for `asav`; `ftd` for `ftdv`; `linux` for `ubuntu`, `alpine`, and `server`. Any other definition is copied unchanged. `group` is the value of a `group:` tag, else null. An IOS-XE check calls a device only when `platform` is `iosxe` and `access.restconf` is not null.
 - Interface `label` on that node. `cidr` is `ip_address` when the interface object has one, else an `ip address` line parsed from `running_config`, else the same line from `bootstrap_config`, else null.
 - Links whose interface ids resolve to a node label and an interface label.
 - Every well-formed `pat:<external>:<internal>` tag, on `forwarded`. Internal `443` sets `access.restconf`. Internal `22` sets `access.ssh`. Both only when that internal port appears once on the node.

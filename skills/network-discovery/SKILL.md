@@ -1,7 +1,7 @@
 ---
 name: network-discovery
-version: "1.0.0"
-description: "v1.0.0 — CML visit that writes inventory/network.json: devices, links, forwarded ports, and interface addresses parsed from node configuration."
+version: "1.0.2"
+description: "v1.0.2 — CML visit that writes inventory/network.json: devices, platform, links, forwarded ports, and interface addresses."
 ---
 
 # Network discovery

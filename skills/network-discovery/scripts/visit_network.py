@@ -201,6 +201,22 @@ def interface_rows(node, addresses):
     return rows
 
 
+def platform_for(node_definition):
+    """Classify a CML node definition. Unknown types keep the source string."""
+    name = (node_definition or "").strip().lower()
+    if name in {"cat8000v", "iosv", "csr1000v", "iosvl2"}:
+        return "iosxe"
+    if name in {"nxosv", "nxosv9000"}:
+        return "nxos"
+    if name in {"asav"}:
+        return "asa"
+    if name in {"ftdv"}:
+        return "ftd"
+    if name in {"ubuntu", "alpine", "server"}:
+        return "linux"
+    return node_definition or ""
+
+
 def device_from_node(node):
     tags = list(node.get("tags") or [])
     forwarded, kept, group = forwarded_from_tags(tags)
@@ -217,6 +233,7 @@ def device_from_node(node):
         "id": node.get("id") or "",
         "name": name,
         "node_definition": node.get("node_definition") or "",
+        "platform": platform_for(node.get("node_definition") or ""),
         "state": node.get("state"),
         "group": group,
         "tags": kept,
@@ -292,6 +309,14 @@ def diff_network(prior, current, at):
             continue
         left = device_view(before)
         right = device_view(after)
+        if before.get("platform") != after.get("platform"):
+            changes.append({
+                "keys": key,
+                "field": "platform",
+                "prior": before.get("platform"),
+                "current": after.get("platform"),
+                "at": at,
+            })
         if left["forwarded"] != right["forwarded"]:
             changes.append({
                 "keys": key,
