@@ -4,9 +4,11 @@ Deployed model is **MiniMax** unless noted.
 
 | Agent | Version | Model |
 |-------|---------|-------|
-| Chaos | 1.3.5 | MiniMax |
+| Chaos | 1.3.6 | MiniMax |
 | Device Discovery | 1.0.2 | MiniMax |
 | Network Discovery | 1.0.3 | MiniMax |
+
+Chaos 1.3.6 (skill caldera-mcp 2.4.7, workspace-handoff 1.0.3): the visit does not read `inventory/network.json` itself. A fresh agent with a group is eligible. The Nmap scan still targets the live servers in one pass. MiniMax.
 
 Chaos 1.3.5 (skill caldera-mcp 2.4.6, workspace-handoff 1.0.3): the Nmap scan targets the live servers in one pass. It does not walk a /24. MiniMax.
 

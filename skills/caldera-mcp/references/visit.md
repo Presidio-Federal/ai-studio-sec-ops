@@ -21,9 +21,9 @@ a device.
 The script calls `caldera_status`, then the lists in `tools.md`.
 You do not.
 
-**Agents.** Keep a row when `trusted` is true and `last_seen` is
-under two hours. `group` is the group the agent reported. `device`
-is `host`. Write `campaigns/agents/enrolled.json`.
+**Agents.** Keep a row when `last_seen` is under two hours and
+`group` is not empty. `device` is `host`. Write
+`campaigns/agents/enrolled.json`.
 
 **Abilities.** Keep an ability only when a lab profile that matches
 the network chart lists it. Store id, name, tactic, technique id,

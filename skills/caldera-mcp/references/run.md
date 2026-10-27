@@ -34,10 +34,10 @@ application profile. It does not run every ability in Caldera.
 The script calls `caldera_status`, then reads agents. `include` is
 a list inside the script.
 
-An agent is eligible when `trusted` is true, `last_seen` is within
-two hours, and `group` is not empty. Run one operation for each
-distinct group among those agents. Do not use the network chart
-to pick the group. Do not invent a group.
+An agent is eligible when `last_seen` is within two hours and
+`group` is not empty. Run one operation for each distinct group
+among those agents. Do not use the network chart to pick the
+group. Do not invent a group.
 An empty `group` hits every agent. Skip an agent whose group is
 empty and name that host in the reply. Do not deploy an agent.
 

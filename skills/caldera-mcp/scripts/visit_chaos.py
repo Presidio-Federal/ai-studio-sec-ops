@@ -230,8 +230,6 @@ def enrolled(agents, now):
     for agent in agents:
         if not isinstance(agent, dict):
             continue
-        if agent.get("trusted") not in (True, 1, "true", "True"):
-            continue
         group = agent.get("group") if isinstance(agent.get("group"), str) else ""
         host = agent.get("host") if isinstance(agent.get("host"), str) else ""
         if not group.strip() or not fresh(agent.get("last_seen"), now):

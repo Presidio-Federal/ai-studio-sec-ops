@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.4.6"
-description: "v2.4.6 — Caldera nurse: the Nmap scan hits the live servers in one pass, not a whole subnet."
+version: "2.4.7"
+description: "v2.4.7 — Caldera nurse: a fresh grouped agent runs the Nmap scan. Trust is not required."
 ---
 
 # Caldera skill
