@@ -37,7 +37,7 @@ FORBIDDEN_TACTICS = {
     "defense-evasion",
 }
 GOAL_KIND = {
-    "chaos": KIND_ORDER,
+    "chaos": ("scan",),
     "traffic": ("traffic",),
     "scan": ("scan",),
     "application": ("application",),

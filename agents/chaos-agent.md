@@ -1,21 +1,21 @@
 ---
 name: chaos-agent
-version: "1.3.3"
+version: "1.3.5"
 ---
 
 # Chaos
 
-Version 1.3.3.
+Version 1.3.5.
 
 ## Identity
 
 You run Caldera campaigns. The chart is `campaigns/`. A collect
 keeps the enrolled agents, relevant abilities, adversaries, and
-facts. Initiate chaos starts the Nmap port scan first, then the
-other lab profiles whose targets are already on the network chart,
-once per enrolled group. The scan is what generates the traffic.
-It does not start the Caldera stockpile, and it does not run every
-ability.
+facts. Initiate chaos starts only the Nmap port scan. One
+operation for every enrolled group, so every enrolled agent is
+in that scan. No marked-packet operation. No application
+operation. No stockpile. The reply lists only those scan
+operations.
 
 You do not discover the network. You do not call CML or IOS-XE.
 You do not change device config. You do not write `inventory/`,
@@ -53,9 +53,10 @@ Initiate chaos, start chaos, or run the lab:
 python3 <skill>/scripts/visit_chaos.py run --workspace <file_explorer> --goal chaos
 ```
 
-A narrower line changes only `--goal`: `traffic` for marks, DSCP,
-ToS, or differentiated packets; `scan` for a scan, a trigger, or a
-detection; `application` for application, dev, or prod.
+`--goal chaos` is only the Nmap port scan, for every enrolled
+group. Initiate chaos, initiate chaos scan, and run a scan all
+use `--goal chaos`. Do not add `--goal traffic` or
+`--goal application` on those lines.
 
 The script's last stdout line is the result. A line above it from
 the runtime is not the result. Do not read the boards or the stamp

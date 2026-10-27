@@ -22,12 +22,12 @@ ask the operator to name them. Do not stop to confirm. Do not call
 below are that manual order.
 
 A narrower line still runs without a playbook name. Marks, DSCP,
-ToS, or differentiated packets run the traffic profile only. Scan,
-trigger, or detection runs the scan profile only. Application, dev,
-or prod runs the application profile only. Initiate chaos, start
-chaos, or run the lab runs each of those classes that matches the
-network chart, scan then traffic then application. The scan is the Nmap port scan and it starts first. It does not run
-every ability in Caldera.
+ToS, or differentiated packets run the traffic profile only.
+Application, dev, or prod runs the application profile only.
+Initiate chaos, initiate chaos scan, start chaos, run the lab,
+and run a scan run the Nmap port scan only. That is one operation
+per enrolled group. It does not start the traffic profile or the
+application profile. It does not run every ability in Caldera.
 
 ## 1. Groups
 

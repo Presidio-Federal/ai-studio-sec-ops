@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.4.4"
-description: "v2.4.4 — Caldera nurse: initiate chaos starts the Nmap scan first, then the other lab profiles."
+version: "2.4.5"
+description: "v2.4.5 — Caldera nurse: initiate chaos runs only the Nmap port scan, one operation per enrolled group."
 ---
 
 # Caldera skill
