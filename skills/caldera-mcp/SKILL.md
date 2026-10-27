@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.4.3"
-description: "v2.4.3 — Caldera nurse: initiate chaos runs the attached visit_chaos.py and writes state/chaos.json."
+version: "2.4.4"
+description: "v2.4.4 — Caldera nurse: initiate chaos starts the Nmap scan first, then the other lab profiles."
 ---
 
 # Caldera skill

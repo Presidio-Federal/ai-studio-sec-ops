@@ -4,9 +4,11 @@ Deployed model is **MiniMax** unless noted.
 
 | Agent | Version | Model |
 |-------|---------|-------|
-| Chaos | 1.3.2 | MiniMax |
+| Chaos | 1.3.3 | MiniMax |
 | Device Discovery | 1.0.2 | MiniMax |
 | Network Discovery | 1.0.3 | MiniMax |
+
+Chaos 1.3.3 (skill caldera-mcp 2.4.4, workspace-handoff 1.0.3): initiate chaos starts with the Nmap port scan, then the marked-packet profile, then the application profile. MiniMax.
 
 Chaos 1.3.2 (skill caldera-mcp 2.4.3, workspace-handoff 1.0.3): a source fact may be a subnet. It matches the network chart when that subnet overlaps an address already on the chart. Workspace handling matches health-logging. First read is `inventory/network.json`. The script accepts `--workspace` only when that file is in the directory. The command copies the path Studio shows for `caldera-mcp/scripts/visit_chaos.py`. MiniMax.
 

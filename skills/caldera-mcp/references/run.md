@@ -26,7 +26,7 @@ ToS, or differentiated packets run the traffic profile only. Scan,
 trigger, or detection runs the scan profile only. Application, dev,
 or prod runs the application profile only. Initiate chaos, start
 chaos, or run the lab runs each of those classes that matches the
-network chart, traffic then scan then application. It does not run
+network chart, scan then traffic then application. The scan is the Nmap port scan and it starts first. It does not run
 every ability in Caldera.
 
 ## 1. Groups

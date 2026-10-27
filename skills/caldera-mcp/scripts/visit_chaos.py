@@ -28,7 +28,7 @@ except ImportError:
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas"
 WORD = re.compile(r"[a-z]+")
-KIND_ORDER = ("traffic", "scan", "application")
+KIND_ORDER = ("scan", "traffic", "application")
 FORBIDDEN_TACTICS = {
     "exfiltration",
     "lateral-movement",
