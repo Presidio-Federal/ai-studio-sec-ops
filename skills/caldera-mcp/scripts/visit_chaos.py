@@ -286,8 +286,9 @@ def pair_source(profile, sources):
     need = {"traffic": "traffic", "scan": "scan", "application": "app"}[profile["kind"]]
     if need not in tokens(profile["name"]):
         return None
+    exact = {"scan": "lab-scan", "traffic": "lab-traffic", "app": "lab-apps"}[need]
     for source in sources:
-        if need in tokens(source.get("name") or ""):
+        if (source.get("name") or "").lower() == exact:
             return source
     return None
 
@@ -357,10 +358,13 @@ def fact_ip(value):
 
 
 def on_chart(value, nets):
-    ip = fact_ip(value)
+    text = value.strip()
+    parts = text.split()
+    if len(parts) > 1 and "://" not in text:
+        return all(on_chart(part, nets) for part in parts)
+    ip = fact_ip(text)
     if ip is not None:
         return any(ip in net for net in nets)
-    text = value.strip()
     if "://" in text:
         return False
     try:

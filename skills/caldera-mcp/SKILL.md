@@ -1,7 +1,7 @@
 ---
 name: caldera-mcp
-version: "2.4.5"
-description: "v2.4.5 — Caldera nurse: initiate chaos runs only the Nmap port scan, one operation per enrolled group."
+version: "2.4.6"
+description: "v2.4.6 — Caldera nurse: the Nmap scan hits the live servers in one pass, not a whole subnet."
 ---
 
 # Caldera skill

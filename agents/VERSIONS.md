@@ -8,6 +8,8 @@ Deployed model is **MiniMax** unless noted.
 | Device Discovery | 1.0.2 | MiniMax |
 | Network Discovery | 1.0.3 | MiniMax |
 
+Chaos 1.3.5 (skill caldera-mcp 2.4.6, workspace-handoff 1.0.3): the Nmap scan targets the live servers in one pass. It does not walk a /24. MiniMax.
+
 Chaos 1.3.5 (skill caldera-mcp 2.4.5, workspace-handoff 1.0.3): initiate chaos is only the Nmap port scan, one operation for every enrolled group. The reply lists only those scan operations. MiniMax.
 
 Chaos 1.3.4 (skill caldera-mcp 2.4.5, workspace-handoff 1.0.3): initiate chaos runs only the Nmap port scan, one operation per enrolled group. Marked packets and application runs stay on their own lines. MiniMax.
